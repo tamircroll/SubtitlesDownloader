@@ -24,9 +24,10 @@ namespace ConsoleApplication1
             byte[] moviehash = HashCoder.ComputeMovieHash( file);
             string hash = HashCoder.ToHexadecimal(moviehash);
             OpenSubtitlesDownloader openSubtitlesDownloader = new OpenSubtitlesDownloader();
-
-            string token = openSubtitlesDownloader.getToken();
-            openSubtitlesDownloader.searchSubs(hash, token, file);
+            string fileLength = new FileInfo(file).Length.ToString();
+            string token = openSubtitlesDownloader.GetToken();
+            openSubtitlesDownloader.SearchSubs(hash, token, fileLength);
+            openSubtitlesDownloader.DownloadSubs(token, new List<string> { "1951894257", "1951853345"});
 
             Console.ReadLine();
         }
