@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Data;
 using System.IO;
-using System.Net;
-using System.Text;
+using System.Security.Cryptography;
+using ConsoleApplication1.Files;
 
 namespace ConsoleApplication1
 {
@@ -20,16 +20,35 @@ namespace ConsoleApplication1
 
         private static void Main(string[] args)
         {
-            string file = @"C:\Users\dell\Desktop\Movies\The Wire\Season 1\The Wire Season 1 Episode 01 - The Target.avi";
+            string file = @"C:\Users\dell\Desktop\Movies\Total Recall 1990\Total.Recall.Mind.Bending.mp4";
             byte[] moviehash = HashCoder.ComputeMovieHash( file);
             string hash = HashCoder.ToHexadecimal(moviehash);
-            OpenSubtitlesDownloader openSubtitlesDownloader = new OpenSubtitlesDownloader();
+            OpenSubtitlesDownloader openSubtitlesDownloader = new OpenSubtitlesDownloader(new List<string>{"hebrew"});
             string fileLength = new FileInfo(file).Length.ToString();
             string token = openSubtitlesDownloader.GetToken();
             List<string> ids = openSubtitlesDownloader.SearchSubs(hash, token, fileLength);
-            openSubtitlesDownloader.DownloadSubs(token, ids);
+            List<string> encodedSubs = openSubtitlesDownloader.GetEncodedSubs(token, ids);
+            FilesUtiles filesUtiles = new FilesUtiles();
 
-            Console.ReadLine();
+            List<byte[]> decoded = getListDecoded(encodedSubs);
+
+            filesUtiles.UnZipBytes(@"C:\Users\dell\Desktop\Movies\Total Recall 1990\subs.srt", decoded[0]);
+        }
+
+        public static List<byte[]> getListDecoded(List<string> i_StringEncodedLst)
+        {
+            List<byte[]> lst = new List<byte[]>();
+            for (int i = 0; i < i_StringEncodedLst.Count; i++)
+            {
+                lst.Add(Decode(i_StringEncodedLst[i]));
+            }
+
+            return lst;
+        }
+
+        private static byte[] Decode(string i_EncodedString)
+        {
+            return Convert.FromBase64String(i_EncodedString);
         }
     }
 }
