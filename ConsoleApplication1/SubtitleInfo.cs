@@ -1,4 +1,6 @@
-﻿namespace ConsoleApplication1
+﻿using System.Xml;
+
+namespace ConsoleApplication1
 {
     using System;
     using System.Collections.Generic;
@@ -6,26 +8,30 @@
 
     public class SubtitleInfo
     {
-        private string m_XmlData;
-        private string m_File;
-        private string m_Encoding;
+        private string token;
 
-        public string XmlData
+        public SubtitleInfo(XmlNode i_XmlData, MovieFileInfo i_FileInfo, string i_Token)
         {
-            get { return m_XmlData; }
-            set { m_XmlData = value; }
+            XmlData = i_XmlData;
+            token = i_Token;
+            XmlNodeList xmlMembersList = i_XmlData.ChildNodes;
+            Encoding = XmlUtiles.getMemberValueByName(xmlMembersList, "SubEncoding");
+            Id = XmlUtiles.getMemberValueByName(xmlMembersList, "IDSubtitleFile");
+            Languagh = XmlUtiles.getMemberValueByName(xmlMembersList, "LanguageName");
         }
 
-        public string File
-        {
-            get { return m_File; }
-            set { m_File = value; }
-        }
+        public XmlNode XmlData { get; private set; }
 
-        public string Encoding
+        public string Id { get; private set; }
+
+        public string Encoding { get; private set; }
+
+        public string Languagh { get; private set; }
+
+        public string GetEncodedSubs()
         {
-            get { return m_Encoding; }
-            set { m_Encoding = value; }
+            List<string> encodedSubs = new OpenSubtitlesDownloader().GetEncodedSubs(token, new List<string> { Id });
+            return encodedSubs[0];
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 
@@ -12,6 +9,10 @@ namespace ConsoleApplication1
         private readonly RestApi m_RestApi = new RestApi();
         private readonly string m_OpensubtitlesUrl = @"http://api.opensubtitles.org:80/xml-rpc";
         private readonly List<string> m_Languages;
+
+        public OpenSubtitlesDownloader()
+        {
+        }
 
         public OpenSubtitlesDownloader(List<string> i_Languages)
         {
@@ -36,6 +37,12 @@ namespace ConsoleApplication1
             string response = m_RestApi.sendPostRequest(m_OpensubtitlesUrl, searchSubsXml);
 
             return extractAllDataByNodeName(response, "IDSubtitleFile", true);
+        }
+
+        public string getSearchResult(string i_Hash, string i_Token, string i_FileLength)
+        {
+            string searchSubsXml = string.Format(serachSubsRequestXml, i_Token, i_Hash, i_FileLength);
+            return m_RestApi.sendPostRequest(m_OpensubtitlesUrl, searchSubsXml);
         }
 
         public List<string> GetEncodedSubs(string i_Token, List<string> sutitlesIds)
