@@ -9,13 +9,12 @@ namespace ConsoleApplication1
 {
     public class OpenSubtitlesDownloader
     {
+        private readonly string m_OpensubtitlesUrl = @"http://api.opensubtitles.org:80/xml-rpc";
+        private readonly List<string> m_Languages = new List<string> { "hebrew", "english" };
 
         public string GetToken()
         {
-            WebRequest request = WebRequest.Create(@"http://api.opensubtitles.org:80/xml-rpc");
-            byte[] body = Encoding.UTF8.GetBytes(getTokenXML);
-
-            string responseFromServer = getResponseFromServer(request, body);
+            string responseFromServer = getPostResponse(m_OpensubtitlesUrl, getTokenXMLRequest);
 
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(responseFromServer);
@@ -25,43 +24,99 @@ namespace ConsoleApplication1
             return firstChild.InnerText;
         }
 
-        public void SearchSubs(string i_Hash, string i_Token, string i_FileLength)
+        public List<string> SearchSubs(string i_Hash, string i_Token, string i_FileLength)
         {
             Console.WriteLine("Hash: " + i_Hash + "Token: " + i_Token + "File Length: " + i_FileLength);
-            string searchSubsXml = string.Format(serachSubs, i_Token, i_Hash, i_FileLength);
+            string searchSubsXml = string.Format(serachSubsRequestXml, i_Token, i_Hash, i_FileLength);
 
-            WebRequest request = WebRequest.Create(@"http://api.opensubtitles.org:80/xml-rpc");
-            byte[] body = Encoding.UTF8.GetBytes(searchSubsXml);
-            string response = getResponseFromServer(request, body);
+            string response = getPostResponse(m_OpensubtitlesUrl, searchSubsXml);
 
-//            Console.WriteLine(response);
+            return getIdsFromXml(response);
         }
+
+
+
+
+        private List<string> getIdsFromXml(string i_Response)
+        {
+            List<string> ids = new List<string>();
+
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(i_Response);
+            XmlNode allSubsData = xmlDoc.GetElementsByTagName("data")[0];
+            XmlNodeList subsNodesLst = allSubsData.ChildNodes;
+
+            
+
+            foreach (XmlNode subsData in subsNodesLst)
+            {
+                if (!desiredLanguage(subsData.FirstChild)) continue;
+
+                string id = extractId(subsData.FirstChild);
+                if (id != null) ids.Add(id);
+            }
+
+            return ids;
+        }
+
+
+        private bool desiredLanguage(XmlNode i_Node)
+        {
+            XmlNodeList memberNodes = i_Node.ChildNodes;
+
+            foreach (XmlNode member in memberNodes)
+            {
+                if (member.FirstChild.InnerText != "LanguageName") continue;
+
+                string language = member.ChildNodes[1].FirstChild.InnerXml;
+                if (m_Languages.Contains(language.ToLower())) return true;
+
+                return false;
+            }
+
+            return false;
+        }
+
+
+
+        private string extractId(XmlNode i_Node)
+        {
+            XmlNodeList memberNodes = i_Node.ChildNodes;
+
+            foreach (XmlNode member in memberNodes)
+            {
+                if (member.FirstChild.InnerText != "IDSubMovieFile") continue;
+
+                return member.ChildNodes[1].FirstChild.InnerXml;
+            }
+
+            return null;
+        }
+
+
+
+
+
+
+
+
+
+
 
         public void DownloadSubs(string i_Token, List<string> sutitlesIds)
         {
             string downloadSubsXml = string.Format(downloadXmlRequest, i_Token, getIdsAsXmlList(sutitlesIds));
 
-            WebRequest request = WebRequest.Create(@"http://api.opensubtitles.org:80/xml-rpc");
-            byte[] body = Encoding.UTF8.GetBytes(downloadSubsXml);
-            string response = getResponseFromServer(request, body);
+            string response = getPostResponse(m_OpensubtitlesUrl, downloadSubsXml);
 
             Console.WriteLine(response);
         }
 
-        private string getIdsAsXmlList(List<string> sutitlesIds)
+        private string getPostResponse(string i_Url, string i_BodyStr)
         {
-            StringBuilder output = new StringBuilder();
+            WebRequest request = WebRequest.Create(i_Url);
+            byte[] body = Encoding.UTF8.GetBytes(i_BodyStr);
 
-            foreach (string id in sutitlesIds)
-            {
-                output.AppendLine("<value><int>" + id +"</int></value>");
-            }
-
-            return output.ToString();
-        }
-
-        private string getResponseFromServer(WebRequest request, byte[] body)
-        {
             request.Method = "POST";
             request.ContentType = "text/xml";
             request.ContentLength = body.Length;
@@ -85,9 +140,21 @@ namespace ConsoleApplication1
             throw new Exception("Couldn't get info from server");
         }
 
+        private string getIdsAsXmlList(List<string> sutitlesIds)
+        {
+            StringBuilder output = new StringBuilder();
 
-        private string getTokenXML =
-            @"<methodCall>
+            foreach (string id in sutitlesIds)
+            {
+                output.AppendLine("<value><int>" + id + "</int></value>");
+            }
+
+            return output.ToString();
+        }
+
+
+        private readonly string getTokenXMLRequest =
+ @"<methodCall>
  <methodName>LogIn</methodName>
  <params>
   <param>
@@ -105,8 +172,8 @@ namespace ConsoleApplication1
  </params>
 </methodCall>";
 
-        private readonly string serachSubs =
-            @"<methodCall>
+        private readonly string serachSubsRequestXml =
+@"<methodCall>
  <methodName>SearchSubtitles</methodName>
  <params>
   <param>
@@ -140,8 +207,7 @@ namespace ConsoleApplication1
  </params>
 </methodCall>";
 
-
-        private string downloadXmlRequest =
+        private readonly string downloadXmlRequest =
 @"<methodCall>
  <methodName>DownloadSubtitles</methodName>
  <params>
@@ -160,5 +226,6 @@ namespace ConsoleApplication1
   </param>
  </params>
 </methodCall>";
+
     }
 }

@@ -26,8 +26,8 @@ namespace ConsoleApplication1
             OpenSubtitlesDownloader openSubtitlesDownloader = new OpenSubtitlesDownloader();
             string fileLength = new FileInfo(file).Length.ToString();
             string token = openSubtitlesDownloader.GetToken();
-            openSubtitlesDownloader.SearchSubs(hash, token, fileLength);
-            openSubtitlesDownloader.DownloadSubs(token, new List<string> { "1951894257", "1951853345"});
+            List<string> ids = openSubtitlesDownloader.SearchSubs(hash, token, fileLength);
+            openSubtitlesDownloader.DownloadSubs(token, ids);
 
             Console.ReadLine();
         }
