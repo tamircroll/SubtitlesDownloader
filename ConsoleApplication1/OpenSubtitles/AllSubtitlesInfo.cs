@@ -8,21 +8,26 @@ namespace ConsoleApplication1.OpenSubtitles
     public class AllSubtitlesInfo
     {
         private MovieFileInfo m_MovieFileInfo;
-        private List<SubtitleInfo> m_AllSubtitlesInfos;
+        private List<SubtitleInfo> m_AllSubtitlesInfos = new List<SubtitleInfo>();
         private OpenSubtitlesDownloader m_Downloader;
 
         public AllSubtitlesInfo(OpenSubtitlesDownloader i_Downloader, MovieFileInfo i_MovieFileInfo)
         {
             m_Downloader = i_Downloader;
             m_MovieFileInfo = i_MovieFileInfo;
-            m_AllSubtitlesInfos = new List<SubtitleInfo>();
+            setAllSubsInfo();
         }
 
         public List<SubtitleInfo> getAll()
         {
+            return m_AllSubtitlesInfos;
+        }
+
+        private void setAllSubsInfo()
+        {
             string token = m_Downloader.GetToken();
             string searchResult = m_Downloader.getSearchResult(m_MovieFileInfo.Hash, token, m_MovieFileInfo.Length.ToString());
-            var xmlDoc = new XmlDocument(); 
+            var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(searchResult);
             XmlNode xmlMainData = xmlDoc.GetElementsByTagName("data")[0];
             XmlNodeList subtitleXmlsList = xmlMainData.FirstChild.ChildNodes;
@@ -32,12 +37,11 @@ namespace ConsoleApplication1.OpenSubtitles
                 SubtitleInfo subtitleInfo = new SubtitleInfo(subtitleXml, m_MovieFileInfo);
                 m_AllSubtitlesInfos.Add(subtitleInfo);
             }
-
-            return m_AllSubtitlesInfos;
         }
 
         public List<SubtitleInfo> getFilteredByLanguage(string i_Language)
         {
+            if (m_AllSubtitlesInfos == null) getAll();
             return m_AllSubtitlesInfos.Where(info => info.Languagh.ToLower() == i_Language.ToLower()).ToList();
         }
     }

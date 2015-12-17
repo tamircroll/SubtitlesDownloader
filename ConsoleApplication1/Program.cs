@@ -39,7 +39,7 @@ namespace ConsoleApplication1
                 {
                     return DownloadSubsToFile(i_FileInfo, i_Language);
                 }
-                Console.WriteLine("Subs alreadyExists to: {0}", i_FileInfo.getFileName());
+
                 return true;
             }
             catch (Exception e)
