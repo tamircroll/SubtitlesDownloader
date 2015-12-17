@@ -1,23 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Text;
-using System.Xml;
+﻿using System.Xml;
 
-namespace ConsoleApplication1
+namespace ConsoleApplication1.OpenSubtitles
 {
     public class OpenSubtitlesDownloader
     {
-        private readonly RestApi m_RestApi = new RestApi();
+        private readonly RestApi.RestApi m_RestApi = new RestApi.RestApi();
         private readonly string m_OpensubtitlesUrl = @"http://api.opensubtitles.org:80/xml-rpc";
-        private readonly List<string> m_Languages = new List<string> {"heb", "eng"};
-
-        public OpenSubtitlesDownloader()
-        {
-        }
-
-        public OpenSubtitlesDownloader(List<string> i_Languages)
-        {
-            m_Languages = i_Languages;
-        }
 
         public string GetToken()
         {
@@ -33,20 +21,8 @@ namespace ConsoleApplication1
 
         public string getSearchResult(string i_Hash, string i_Token, string i_FileLength)
         {
-            string searchSubsXml = string.Format(serachSubsRequestXml, i_Token, getAllLanguagesCodesAsString(), i_Hash, i_FileLength);
+            string searchSubsXml = string.Format(serachSubsRequestXml, i_Token, i_Hash, i_FileLength);
             return m_RestApi.sendPostRequest(m_OpensubtitlesUrl, searchSubsXml);
-        }
-
-        private string getAllLanguagesCodesAsString()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            foreach (string language in m_Languages)
-            {
-                sb.Append(language);
-            }
-
-            return sb.ToString();
         }
 
         private readonly string getTokenXMLRequest =
@@ -83,16 +59,16 @@ namespace ConsoleApplication1
        <struct>
         <member>
          <name>sublanguageid</name>
-         <value><string>{1}</string>
+         <value><string></string>
          </value>
         </member>
         <member>
          <name>moviehash</name>
-         <value><string>{2}</string></value>
+         <value><string>{1}</string></value>
         </member>
         <member>
          <name>moviebytesize</name>
-         <value><double>{3}</double></value>
+         <value><double>{2}</double></value>
         </member>
        </struct>
       </value>

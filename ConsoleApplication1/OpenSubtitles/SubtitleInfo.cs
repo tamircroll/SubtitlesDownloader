@@ -1,32 +1,33 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net;
 using System.Xml;
-using System.Linq;
 using ConsoleApplication1.Files;
-using FileInfo = ConsoleApplication1.Files.FileInfo;
 
-namespace ConsoleApplication1
+namespace ConsoleApplication1.OpenSubtitles
 {
 
     public class SubtitleInfo
     {
         private MovieFileInfo m_MovieFileInfo;
-        private readonly FileInfo m_ZipFile;
-        private FileInfo m_SrtFile;
+        private readonly MyFileInfo m_ZipFile;
 
         public SubtitleInfo(XmlNode i_XmlData, MovieFileInfo i_MovieFileInfo)
         {
             XmlData = i_XmlData;
             m_MovieFileInfo = i_MovieFileInfo;
-            m_ZipFile = new FileInfo(m_MovieFileInfo.getFileFoler() + @"\tempFolder\" + m_MovieFileInfo.getFileName() + @".zip");
-            m_SrtFile = new FileInfo(m_MovieFileInfo.PathToFileWithOutExtention() + @".srt");
+            m_ZipFile = new Files.MyFileInfo(m_MovieFileInfo.getFileFoler() + @"\tempFolder\" + m_MovieFileInfo.getFileName() + @".zip");
+            SrtFile = new Files.MyFileInfo(m_MovieFileInfo.PathToFileWithOutExtention() + @".srt");
             XmlNodeList xmlMembersList = i_XmlData.ChildNodes;
             Id = XmlUtiles.getMemberValueByName(xmlMembersList, "IDSubtitleFile");
             LinkToDownload = XmlUtiles.getMemberValueByName(xmlMembersList, "ZipDownloadLink");
             Encoding = XmlUtiles.getMemberValueByName(xmlMembersList, "SubEncoding");
             Languagh = XmlUtiles.getMemberValueByName(xmlMembersList, "LanguageName").ToLower();
         }
+
+        public MyFileInfo SrtFile { get; private set; }
 
         public string LinkToDownload { get; private set; }
 
@@ -45,6 +46,7 @@ namespace ConsoleApplication1
 
         public void DownloadFile()
         {
+            Console.WriteLine("Downloading subtitles to: " + m_MovieFileInfo.getFileName());
             DownloadZipped();
             UnZipp();
             CopyToFileFolder();
@@ -54,7 +56,7 @@ namespace ConsoleApplication1
         private void CopyToFileFolder()
         {
             string srtFile = new FilesUtiles().getAllFilesWithExtention(m_ZipFile.GetDirectoryName(), "srt").First();
-            File.Copy(srtFile, m_SrtFile.FilePath, true);
+            File.Copy(srtFile, SrtFile.FilePath, true);
         }
 
         public void DownloadZipped()

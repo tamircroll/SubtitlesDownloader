@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Security.Cryptography;
 using ConsoleApplication1.Files;
 using ConsoleApplication1.OpenSubtitles;
 
@@ -10,40 +7,75 @@ namespace ConsoleApplication1
 {
     internal class Program
     {
-        private List<String> videoExtentions = new List<String>
-        {
-            "*.3g2","*.3gp","*.3gp2","*.3gpp","*.60d","*.ajp","*.asf","*.asx","*.avchd","*.avi","*.bik","*.bix","*.box","*.cam","*.dat","*.divx","*.dmf",
-            "*.dv","*.dvr-ms","*.evo","*.flc","*.fli","*.flic","*.flv","*.flx","*.gvi","*.gvp","*.h264","*.m1v","*.m2p","*.m2ts","*.m2v","*.m4e","*.m4v",
-            "*.mjp","*.mjpeg","*.mjpg","*.mkv","*.moov","*.mov","*.movhd","*.movie","*.movx","*.mp4","*.mpe","*.mpeg","*.mpg","*.mpv","*.mpv2","*.mxf","*.nsv",
-            "*.nut","*.ogg","*.ogm","*.omf","*.ps","*.qt","*.ram","*.rm","*.rmvb","*.swf", "*.ts","*.vfw","*.vid","*.video","*.viv","*.vivo","*.vob","*.vro",
-            "*.wm","*.wmv","*.wmx","*.wrap","*.wvx","*.wx","*.x264","*.xvid"
-        };
+
 
         private static void Main(string[] args)
         {
-            string file = @"C:\Users\dell\Desktop\Movies\Temp\Temp.avi";
+            string Folder = @"C:\Users\dell\Desktop\Movies";
+            List<string> allMovies = new FilesUtiles().getAllMoviefilesInFolder(Folder, true);
 
-            AllSubtitlesInfo subtitlesInfo = new AllSubtitlesInfo(new OpenSubtitlesDownloader(), new MovieFileInfo(file));
-            List<SubtitleInfo> subtitleInfos = subtitlesInfo.getAll();
-            List<SubtitleInfo> hebSubtitles = subtitlesInfo.getFilteredByLanguage("Hebrow");
-            SubtitleInfo subtitleInfo = subtitleInfos[0];
-            subtitleInfo.DownloadFile();
-        }
-
-        public static List<byte[]> getListDecoded(List<string> i_StringEncodedLst)
-        {
-            List<byte[]> lst = new List<byte[]>();
-            for (int i = 0; i < i_StringEncodedLst.Count; i++)
+            foreach (string file in allMovies)
             {
-                lst.Add(Decode(i_StringEncodedLst[i]));
+                MovieFileInfo fileInfo = new MovieFileInfo(file);
+                bool downloaded = tryDownload(fileInfo, "Hebrew");
+                if (downloaded) continue;
+
+                downloaded = tryDownload(fileInfo, "English");
+                if (downloaded) continue;
+
+                Console.WriteLine("Failed To download Subtitles to: {0}", fileInfo.getFileName());
             }
 
-            return lst;
+            Console.ReadLine();
         }
 
-        private static byte[] Decode(string i_EncodedString)
+        private static bool tryDownload(MovieFileInfo i_FileInfo, string i_Language)
         {
-            return Convert.FromBase64String(i_EncodedString);
+            try
+            {
+                if (!FilesUtiles.FileExisits(i_FileInfo))
+                {
+                    return DownloadSubsToFile(i_FileInfo, i_Language);
+                }
+                Console.WriteLine("Subs alreadyExists to: {0}", i_FileInfo.getFileName());
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error occurred in: {0}({1}). Error msg: {2}", i_FileInfo.getFileName(), i_Language,
+                    e.Message);
+                return false;
+            }
+        }
+
+        public static bool DownloadSubsToFile(MovieFileInfo i_File, string i_Language)
+        {
+            AllSubtitlesInfo subtitlesInfo = new AllSubtitlesInfo(new OpenSubtitlesDownloader(), i_File);
+            List<SubtitleInfo> filteredSubs = subtitlesInfo.getFilteredByLanguage(i_Language);
+
+            if (filteredSubs.Count > 0)
+            {
+                return tryDownloadAny(filteredSubs);
+            }
+
+            Console.WriteLine("{0} No Subs in language: {1} Exsists", i_File.getFileName(), i_Language);
+            return false;
+        }
+
+        private static bool tryDownloadAny(List<SubtitleInfo> filteredSubs)
+        {
+            foreach (SubtitleInfo subtitle in filteredSubs)
+            {
+                try
+                {
+                    subtitle.DownloadFile();
+                }
+                catch (Exception)
+                {
+                }
+                if (FilesUtiles.FileExisits(subtitle.SrtFile)) return true;
+            }
+            return false;
         }
     }
 }

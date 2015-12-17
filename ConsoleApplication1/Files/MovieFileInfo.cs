@@ -1,11 +1,7 @@
-﻿using System.IO;
-using ConsoleApplication1.Files;
-using FileInfo = ConsoleApplication1.Files.FileInfo;
-
-namespace ConsoleApplication1
+﻿namespace ConsoleApplication1.Files
 {
 
-    public class MovieFileInfo : FileInfo
+    public class MovieFileInfo : Files.MyFileInfo
     {
         public MovieFileInfo(string i_FilePath) : base(i_FilePath)
         {

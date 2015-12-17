@@ -1,10 +1,10 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
+using ConsoleApplication1.Files;
 
 namespace ConsoleApplication1.OpenSubtitles
 {
-    using System.Collections.Generic;
-
     public class AllSubtitlesInfo
     {
         private MovieFileInfo m_MovieFileInfo;
@@ -38,13 +38,7 @@ namespace ConsoleApplication1.OpenSubtitles
 
         public List<SubtitleInfo> getFilteredByLanguage(string i_Language)
         {
-            List<SubtitleInfo> toReturn = new List<SubtitleInfo>();
-            foreach (SubtitleInfo info in m_AllSubtitlesInfos)
-            {
-                if(info.Languagh == i_Language.ToLower()) toReturn.Add(info);
-            }
-
-            return toReturn;
+            return m_AllSubtitlesInfos.Where(info => info.Languagh.ToLower() == i_Language.ToLower()).ToList();
         }
     }
 }

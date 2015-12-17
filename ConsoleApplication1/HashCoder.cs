@@ -1,11 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Text;
 
 namespace ConsoleApplication1
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-
     public class HashCoder
     {
         public static byte[] ComputeMovieHash(string filename)

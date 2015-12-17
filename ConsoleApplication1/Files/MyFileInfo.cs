@@ -3,9 +3,9 @@
 namespace ConsoleApplication1.Files
 {
 
-    public class FileInfo
+    public class MyFileInfo
     {
-        public FileInfo(string i_FilePath)
+        public MyFileInfo(string i_FilePath)
         {
             FilePath = i_FilePath;
         }

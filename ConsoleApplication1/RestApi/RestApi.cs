@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 
-namespace ConsoleApplication1
+namespace ConsoleApplication1.RestApi
 {
     public class RestApi
     {

@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Files\FileInfo.cs" />
+    <Compile Include="Files\MyFileInfo.cs" />
     <Compile Include="Files\FilesUtiles.cs" />
     <Compile Include="HashCoder.cs" />
     <Compile Include="Files\MovieFileInfo.cs" />
