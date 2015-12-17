@@ -1,25 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
+﻿using System.IO;
 
 namespace ConsoleApplication1
 {
 
     public class MovieFileInfo
     {
-        public MovieFileInfo(string i_Path)
+        public MovieFileInfo(string i_FilePath)
         {
-            Path = i_Path;
-            byte[] moviehash = HashCoder.ComputeMovieHash(i_Path);
+            FilePath = i_FilePath;
+            byte[] moviehash = HashCoder.ComputeMovieHash(i_FilePath);
             Hash = HashCoder.ToHexadecimal(moviehash);
-            Length = new FileInfo(i_Path).Length;
+            Length = new FileInfo(i_FilePath).Length;
         }
 
         public string Hash { get; private set; }
         
-        public string Path { get; private set; }
+        public string FilePath { get; private set; }
 
         public long Length { get; private set; }
+
+        public string getFileFoler()
+        {
+            return Path.GetDirectoryName(FilePath);
+        }
+
+        public string getFileName()
+        {
+            return Path.GetFileNameWithoutExtension(FilePath);
+        }
+
+        public string PathToFileWithOutExtention()
+        {
+            return getFileFoler() + @"\" + getFileName();
+        }
     }
 }

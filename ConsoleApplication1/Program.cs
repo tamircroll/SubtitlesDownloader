@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Security.Cryptography;
 using ConsoleApplication1.Files;
+using ConsoleApplication1.OpenSubtitles;
 
 namespace ConsoleApplication1
 {
@@ -20,19 +21,13 @@ namespace ConsoleApplication1
 
         private static void Main(string[] args)
         {
-            string file = @"C:\Users\dell\Desktop\Movies\Total Recall 1990\Total.Recall.Mind.Bending.mp4";
-            byte[] moviehash = HashCoder.ComputeMovieHash( file);
-            string hash = HashCoder.ToHexadecimal(moviehash);
-            OpenSubtitlesDownloader openSubtitlesDownloader = new OpenSubtitlesDownloader(new List<string>{"hebrew"});
-            string fileLength = new FileInfo(file).Length.ToString();
-            string token = openSubtitlesDownloader.GetToken();
-            List<string> ids = openSubtitlesDownloader.SearchSubs(hash, token, fileLength);
-            List<string> encodedSubs = openSubtitlesDownloader.GetEncodedSubs(token, ids);
-            FilesUtiles filesUtiles = new FilesUtiles();
+            string file = @"C:\Users\dell\Desktop\Movies\Temp\Temp.avi";
 
-            List<byte[]> decoded = getListDecoded(encodedSubs);
-
-            filesUtiles.UnZipBytes(@"C:\Users\dell\Desktop\Movies\Total Recall 1990\subs.srt", decoded[0]);
+            AllSubtitlesInfo subtitlesInfo = new AllSubtitlesInfo(new OpenSubtitlesDownloader(), new MovieFileInfo(file));
+            List<SubtitleInfo> subtitleInfos = subtitlesInfo.getAll();
+            List<SubtitleInfo> hebSubtitles = subtitlesInfo.getFilteredByLanguage("Hebrow");
+            SubtitleInfo subtitleInfo = subtitleInfos[0];
+            subtitleInfo.DownloadFile();
         }
 
         public static List<byte[]> getListDecoded(List<string> i_StringEncodedLst)

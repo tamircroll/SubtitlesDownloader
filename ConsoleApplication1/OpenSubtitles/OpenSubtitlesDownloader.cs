@@ -8,7 +8,7 @@ namespace ConsoleApplication1
     {
         private readonly RestApi m_RestApi = new RestApi();
         private readonly string m_OpensubtitlesUrl = @"http://api.opensubtitles.org:80/xml-rpc";
-        private readonly List<string> m_Languages;
+        private readonly List<string> m_Languages = new List<string>{};
 
         public OpenSubtitlesDownloader()
         {
@@ -29,14 +29,6 @@ namespace ConsoleApplication1
             XmlNode firstChild = xmlDoc.GetElementsByTagName("string")[0];
 
             return firstChild.InnerText;
-        }
-
-        public List<string> SearchSubs(string i_Hash, string i_Token, string i_FileLength)
-        {
-            string searchSubsXml = string.Format(serachSubsRequestXml, i_Token, i_Hash, i_FileLength);
-            string response = m_RestApi.sendPostRequest(m_OpensubtitlesUrl, searchSubsXml);
-
-            return extractAllDataByNodeName(response, "IDSubtitleFile", true);
         }
 
         public string getSearchResult(string i_Hash, string i_Token, string i_FileLength)
@@ -191,3 +183,14 @@ namespace ConsoleApplication1
 
     }
 }
+
+
+
+//        public List<string> SearchSubs(string i_Hash, string i_Token, string i_FileLength)
+//        {
+//            string searchSubsXml = string.Format(serachSubsRequestXml, i_Token, i_Hash, i_FileLength);
+//            string response = m_RestApi.sendPostRequest(m_OpensubtitlesUrl, searchSubsXml);
+//
+//            return extractAllDataByNodeName(response, "IDSubtitleFile", true);
+//        }
+

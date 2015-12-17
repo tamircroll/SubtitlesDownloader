@@ -13,6 +13,13 @@ namespace ConsoleApplication1.Files
             file.WriteLine(i_ContentToWrite);
         }
 
+
+
+        public string[] getAllFilesWithExtention(string i_FolderPath, string i_Extention)
+        {
+            return Directory.GetFiles(i_FolderPath, "*." + i_Extention, SearchOption.AllDirectories);
+        }
+
         public void UnZipBytes(string i_OutputFile, byte[] inputBytes)
         {
             using (GZipStream stream = new GZipStream(new MemoryStream(inputBytes), CompressionMode.Decompress))
