@@ -12,6 +12,8 @@ namespace ConsoleApplication1
         private static void Main(string[] args)
         {
             string Folder = @"C:\Users\dell\Desktop\Movies";
+            List<string> languages = new List<string> {"Hebrew", "English"};
+
             List<string> allMovies = new FilesUtiles().getAllMoviefilesInFolder(Folder, true);
 
             foreach (string file in allMovies)
@@ -64,17 +66,21 @@ namespace ConsoleApplication1
 
         private static bool tryDownloadAny(List<SubtitleInfo> filteredSubs)
         {
-            foreach (SubtitleInfo subtitle in filteredSubs)
+            for (int i = 0; i < filteredSubs.Count; i++)
             {
                 try
                 {
-                    subtitle.DownloadFile();
+                    filteredSubs[i].DownloadFile();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    string continueMsg = (i + 1 < filteredSubs.Count) ? "keep trying" : "No more tries";
+                    Console.WriteLine("Error occurred in: {0}({1}). Error msg: {2}, {3}",
+                        filteredSubs[i].MovieFile.getFileName(), filteredSubs[i].Languagh, e.Message, continueMsg);
                 }
-                if (FilesUtiles.FileExisits(subtitle.SrtFile)) return true;
+                if (FilesUtiles.FileExisits(filteredSubs[i].SrtFile)) return true;
             }
+
             return false;
         }
     }

@@ -11,15 +11,12 @@ namespace ConsoleApplication1.OpenSubtitles
 
     public class SubtitleInfo
     {
-        private MovieFileInfo m_MovieFileInfo;
-        private readonly MyFileInfo m_ZipFile;
-
         public SubtitleInfo(XmlNode i_XmlData, MovieFileInfo i_MovieFileInfo)
         {
             XmlData = i_XmlData;
-            m_MovieFileInfo = i_MovieFileInfo;
-            m_ZipFile = new Files.MyFileInfo(m_MovieFileInfo.getFileFoler() + @"\tempFolder\" + m_MovieFileInfo.getFileName() + @".zip");
-            SrtFile = new Files.MyFileInfo(m_MovieFileInfo.PathToFileWithOutExtention() + @".srt");
+            MovieFile = i_MovieFileInfo;
+            ZipFile = new Files.MyFileInfo(MovieFile.getFileFoler() + @"\tempFolder\" + MovieFile.getFileName() + @".zip");
+            SrtFile = new Files.MyFileInfo(MovieFile.PathToFileWithOutExtention() + @".srt");
             XmlNodeList xmlMembersList = i_XmlData.ChildNodes;
             Id = XmlUtiles.getMemberValueByName(xmlMembersList, "IDSubtitleFile");
             LinkToDownload = XmlUtiles.getMemberValueByName(xmlMembersList, "ZipDownloadLink");
@@ -27,9 +24,13 @@ namespace ConsoleApplication1.OpenSubtitles
             Languagh = XmlUtiles.getMemberValueByName(xmlMembersList, "LanguageName").ToLower();
         }
 
-        public MyFileInfo SrtFile { get; private set; }
+        public MovieFileInfo MovieFile { get; set; }
 
-        public string LinkToDownload { get; private set; }
+        public MyFileInfo ZipFile { get; set; }
+
+        public MyFileInfo SrtFile { get; set; }
+
+        public string LinkToDownload { get; set; }
 
         public XmlNode XmlData { get; private set; }
 
@@ -41,21 +42,21 @@ namespace ConsoleApplication1.OpenSubtitles
 
         public string MovieFilePath()
         {
-            return m_MovieFileInfo.FilePath;
+            return MovieFile.FilePath;
         }
 
         public void DownloadFile()
         {
-            Console.WriteLine("Downloading subtitles to: " + m_MovieFileInfo.getFileName());
+            Console.WriteLine("Downloading subtitles to: " + MovieFile.getFileName());
             DownloadZipped();
             UnZipp();
             CopyToFileFolder();
-            Directory.Delete(m_ZipFile.GetDirectoryName(), true);
+            Directory.Delete(ZipFile.GetDirectoryName(), true);
         }
 
         private void CopyToFileFolder()
         {
-            string srtFile = new FilesUtiles().getAllFilesWithExtention(m_ZipFile.GetDirectoryName(), "srt").First();
+            string srtFile = new FilesUtiles().getAllFilesWithExtention(ZipFile.GetDirectoryName(), "srt").First();
             File.Copy(srtFile, SrtFile.FilePath, true);
         }
 
@@ -63,14 +64,14 @@ namespace ConsoleApplication1.OpenSubtitles
         {
             using (var client = new WebClient())
             {
-                Directory.CreateDirectory(m_ZipFile.GetDirectoryName());
-                client.DownloadFile(LinkToDownload, m_ZipFile.FilePath);
+                Directory.CreateDirectory(ZipFile.GetDirectoryName());
+                client.DownloadFile(LinkToDownload, ZipFile.FilePath);
             }
         }
 
         public void UnZipp()
         {
-            ZipFile.ExtractToDirectory(m_ZipFile.FilePath, m_ZipFile.GetDirectoryName());
+            System.IO.Compression.ZipFile.ExtractToDirectory(ZipFile.FilePath, ZipFile.GetDirectoryName());
         }
     }
 }
