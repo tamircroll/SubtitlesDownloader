@@ -30,7 +30,7 @@ namespace SubtitlesDownloader.OpenSubtitles
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(searchResult);
             XmlNode xmlMainData = xmlDoc.GetElementsByTagName("data")[0];
-            XmlNodeList subtitleXmlsList = xmlMainData.FirstChild.ChildNodes;
+            XmlNodeList subtitleXmlsList = xmlMainData.ChildNodes;
 
             foreach (XmlNode subtitleXml in subtitleXmlsList)
             {
@@ -41,7 +41,7 @@ namespace SubtitlesDownloader.OpenSubtitles
 
         public List<SubtitleInfo> getFilteredByLanguage(string i_Language)
         {
-            if (m_AllSubtitlesInfos == null) getAll();
+            if (m_AllSubtitlesInfos == null) setAllSubsInfo();
             return m_AllSubtitlesInfos.Where(info => info.Languagh.ToLower() == i_Language.ToLower()).ToList();
         }
     }
