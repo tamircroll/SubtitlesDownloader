@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 
-namespace ConsoleApplication1.RestApi
+namespace SubtitlesDownloader.RestApi
 {
     public class RestApi
     {

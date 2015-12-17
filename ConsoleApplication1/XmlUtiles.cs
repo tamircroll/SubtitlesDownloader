@@ -1,6 +1,6 @@
 ﻿using System.Xml;
 
-namespace ConsoleApplication1
+namespace SubtitlesDownloader
 {
     public class XmlUtiles
     {

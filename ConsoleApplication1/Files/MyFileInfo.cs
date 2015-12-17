@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace ConsoleApplication1.Files
+namespace SubtitlesDownloader.Files
 {
 
     public class MyFileInfo

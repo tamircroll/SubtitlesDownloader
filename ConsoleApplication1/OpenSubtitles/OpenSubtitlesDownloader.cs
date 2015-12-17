@@ -1,6 +1,6 @@
 ﻿using System.Xml;
 
-namespace ConsoleApplication1.OpenSubtitles
+namespace SubtitlesDownloader.OpenSubtitles
 {
     public class OpenSubtitlesDownloader
     {

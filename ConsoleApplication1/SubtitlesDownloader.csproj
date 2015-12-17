@@ -8,8 +8,8 @@
     <ProjectGuid>{35F731C5-411E-48F4-BB63-B31091917F38}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ConsoleApplication1</RootNamespace>
-    <AssemblyName>ConsoleApplication1</AssemblyName>
+    <RootNamespace>SubtitlesDownloader</RootNamespace>
+    <AssemblyName>SubtitlesDownloader</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -34,7 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>ConsoleApplication1.Program</StartupObject>
+    <StartupObject>SubtitlesDownloader.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

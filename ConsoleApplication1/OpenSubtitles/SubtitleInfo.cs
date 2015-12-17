@@ -1,12 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Xml;
-using ConsoleApplication1.Files;
+using SubtitlesDownloader.Files;
 
-namespace ConsoleApplication1.OpenSubtitles
+namespace SubtitlesDownloader.OpenSubtitles
 {
 
     public class SubtitleInfo
@@ -15,8 +14,8 @@ namespace ConsoleApplication1.OpenSubtitles
         {
             XmlData = i_XmlData;
             MovieFile = i_MovieFileInfo;
-            ZipFile = new Files.MyFileInfo(MovieFile.getFileFoler() + @"\tempFolder\" + MovieFile.getFileName() + @".zip");
-            SrtFile = new Files.MyFileInfo(MovieFile.PathToFileWithOutExtention() + @".srt");
+            ZipFile = new MyFileInfo(MovieFile.getFileFoler() + @"\tempFolder\" + MovieFile.getFileName() + @".zip");
+            SrtFile = new MyFileInfo(MovieFile.PathToFileWithOutExtention() + @".srt");
             XmlNodeList xmlMembersList = i_XmlData.ChildNodes;
             Id = XmlUtiles.getMemberValueByName(xmlMembersList, "IDSubtitleFile");
             LinkToDownload = XmlUtiles.getMemberValueByName(xmlMembersList, "ZipDownloadLink");
@@ -47,10 +46,10 @@ namespace ConsoleApplication1.OpenSubtitles
 
         public void DownloadFile()
         {
-            Console.WriteLine("Downloading subtitles to: " + MovieFile.getFileName());
             DownloadZipped();
             UnZipp();
             CopyToFileFolder();
+            Console.WriteLine("Downloading subtitles to: " + MovieFile.getFileName());
             Directory.Delete(ZipFile.GetDirectoryName(), true);
         }
 

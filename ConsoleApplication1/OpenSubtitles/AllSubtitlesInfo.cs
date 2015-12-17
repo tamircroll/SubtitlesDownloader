@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using ConsoleApplication1.Files;
+using SubtitlesDownloader.Files;
 
-namespace ConsoleApplication1.OpenSubtitles
+namespace SubtitlesDownloader.OpenSubtitles
 {
     public class AllSubtitlesInfo
     {

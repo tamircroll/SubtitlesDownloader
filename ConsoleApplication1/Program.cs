@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using ConsoleApplication1.Files;
-using ConsoleApplication1.OpenSubtitles;
+using SubtitlesDownloader.Files;
+using SubtitlesDownloader.OpenSubtitles;
 
-namespace ConsoleApplication1
+namespace SubtitlesDownloader
 {
     internal class Program
     {
-
-
         private static void Main(string[] args)
         {
             string Folder = @"C:\Users\dell\Desktop\Movies";
