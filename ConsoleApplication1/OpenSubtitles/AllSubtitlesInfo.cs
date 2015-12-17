@@ -7,21 +7,21 @@ namespace ConsoleApplication1.OpenSubtitles
 
     public class AllSubtitlesInfo
     {
-        private MovieFileInfo m_FileInfo ;
+        private MovieFileInfo m_MovieFileInfo;
         private List<SubtitleInfo> m_AllSubtitlesInfos;
         private OpenSubtitlesDownloader m_Downloader;
 
-        public AllSubtitlesInfo(OpenSubtitlesDownloader i_Downloader, MovieFileInfo i_FileInfo)
+        public AllSubtitlesInfo(OpenSubtitlesDownloader i_Downloader, MovieFileInfo i_MovieFileInfo)
         {
             m_Downloader = i_Downloader;
-            m_FileInfo = i_FileInfo;
+            m_MovieFileInfo = i_MovieFileInfo;
             m_AllSubtitlesInfos = new List<SubtitleInfo>();
         }
 
         public List<SubtitleInfo> getAll()
         {
             string token = m_Downloader.GetToken();
-            string searchResult = m_Downloader.getSearchResult(m_FileInfo.Hash, token, m_FileInfo.Length.ToString());
+            string searchResult = m_Downloader.getSearchResult(m_MovieFileInfo.Hash, token, m_MovieFileInfo.Length.ToString());
             var xmlDoc = new XmlDocument(); 
             xmlDoc.LoadXml(searchResult);
             XmlNode xmlMainData = xmlDoc.GetElementsByTagName("data")[0];
@@ -29,7 +29,7 @@ namespace ConsoleApplication1.OpenSubtitles
 
             foreach (XmlNode subtitleXml in subtitleXmlsList)
             {
-                SubtitleInfo subtitleInfo = new SubtitleInfo(subtitleXml, m_FileInfo, token);
+                SubtitleInfo subtitleInfo = new SubtitleInfo(subtitleXml, m_MovieFileInfo);
                 m_AllSubtitlesInfos.Add(subtitleInfo);
             }
 

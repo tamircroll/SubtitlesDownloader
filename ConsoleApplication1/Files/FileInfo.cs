@@ -1,23 +1,16 @@
 ﻿using System.IO;
 
-namespace ConsoleApplication1
+namespace ConsoleApplication1.Files
 {
 
-    public class MovieFileInfo
+    public class FileInfo
     {
-        public MovieFileInfo(string i_FilePath)
+        public FileInfo(string i_FilePath)
         {
             FilePath = i_FilePath;
-            byte[] moviehash = HashCoder.ComputeMovieHash(i_FilePath);
-            Hash = HashCoder.ToHexadecimal(moviehash);
-            Length = new FileInfo(i_FilePath).Length;
         }
 
-        public string Hash { get; private set; }
-        
         public string FilePath { get; private set; }
-
-        public long Length { get; private set; }
 
         public string getFileFoler()
         {
@@ -32,6 +25,11 @@ namespace ConsoleApplication1
         public string PathToFileWithOutExtention()
         {
             return getFileFoler() + @"\" + getFileName();
+        }
+
+        public string GetDirectoryName()
+        {
+            return Path.GetDirectoryName(FilePath);
         }
     }
 }
