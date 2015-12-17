@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using SubtitlesDownloader.Files;
 using SubtitlesDownloader.OpenSubtitles;
 
@@ -8,6 +9,20 @@ namespace SubtitlesDownloader
     internal class Program
     {
         private static void Main(string[] args)
+        {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            Run();
+
+            sw.Stop();
+            TimeSpan elapsedTime = sw.Elapsed;
+            Console.WriteLine("{0}{0}Run Time: {1}", Environment.NewLine, elapsedTime);
+         
+            Console.ReadLine();
+        }
+
+        private static void Run()
         {
             string Folder = @"C:\Users\dell\Desktop\Movies";
             List<string> languages = new List<string> {"Hebrew", "English"};
@@ -25,8 +40,6 @@ namespace SubtitlesDownloader
 
                 Console.WriteLine("Failed To download Subtitles to: {0}", fileInfo.getFileName());
             }
-
-            Console.ReadLine();
         }
 
         private static bool tryDownload(MovieFileInfo i_FileInfo, string i_Language)

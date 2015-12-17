@@ -31,7 +31,7 @@ namespace SubtitlesDownloader.OpenSubtitles
 
         public string LinkToDownload { get; set; }
 
-        public XmlNode XmlData { get; private set; }
+        public XmlNode XmlData { get; set; }
 
         public string Id { get; private set; }
 
@@ -49,7 +49,7 @@ namespace SubtitlesDownloader.OpenSubtitles
             DownloadZipped();
             UnZipp();
             CopyToFileFolder();
-            Console.WriteLine("Downloading subtitles to: " + MovieFile.getFileName());
+            Console.WriteLine("Downloading {0} subtitles to: {1}", Languagh, MovieFile.getFileName());
             Directory.Delete(ZipFile.GetDirectoryName(), true);
         }
 
