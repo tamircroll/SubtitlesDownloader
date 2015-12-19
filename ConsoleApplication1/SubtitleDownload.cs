@@ -8,33 +8,44 @@ namespace SubtitlesDownloader
 
     public class SubtitleDownload //TODO Therads
     {
-        public bool Download(MovieFileInfo i_FileInfo, List<string> i_Languages)
+        private List<string> m_Languages;
+        private MyFileInfo m_SrtFile;
+        private MovieFileInfo m_MovieFile;
+
+        public SubtitleDownload(MovieFileInfo i_MovieFile, List<string> i_Languages, MyFileInfo i_SrtFile)
         {
-            MyFileInfo SrtFile = new MyFileInfo(string.Format(@"{0}.srt", i_FileInfo.PathToFileWithOutExtention()));
+            m_Languages = i_Languages;
+            m_SrtFile = i_SrtFile;
+            m_MovieFile = i_MovieFile;
+        }
 
-            if (FilesUtiles.FileExisits(SrtFile)) return true;
+        public bool Download(ref bool i_ShouldSignOut)
+        {
+            if (FilesUtiles.FileExisits(m_SrtFile)) return true;
 
-            foreach (string language in i_Languages)
+            i_ShouldSignOut = true;
+
+            foreach (string language in m_Languages)
             {
-                bool downloaded = DownloadSubsInLanguage(i_FileInfo, SrtFile, language);
+                bool downloaded = DownloadSubsInLanguage(language);
                 if (downloaded) return true;
             }
 
             return false;
         }
 
-        public bool DownloadSubsInLanguage(MovieFileInfo i_File, MyFileInfo i_SrtFile, string i_Language)
+        private bool DownloadSubsInLanguage(string i_Language)
         {
-            AllSubtitlesInfo subtitlesInfo = new AllSubtitlesInfo(new OpenSubtitlesDownloader(), i_File, i_SrtFile);
+            AllSubtitlesInfo subtitlesInfo = new AllSubtitlesInfo(new OpenSubtitlesDownloader(), m_MovieFile, m_SrtFile);
             List<SubtitleInfo> filteredSubs = subtitlesInfo.getFilteredByLanguage(i_Language);
 
             if (filteredSubs.Count > 0)
             {
-                Console.WriteLine("Movie: " + i_File.getFileName());
+                Console.WriteLine("Movie: " + m_MovieFile.getFileName());
                 return tryDownloadAny(filteredSubs);
             }
-
-            Console.WriteLine("{0} No Subs in language: {1} Exsists", i_File.getFileName(), i_Language);
+            
+            Console.WriteLine("{0} No Subs in language: {1} Exsists", m_MovieFile.getFileName(), i_Language);
 
             return false;
         }

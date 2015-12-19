@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Downloader.cs" />
+    <Compile Include="MoviesDownloader.cs" />
     <Compile Include="Files\MyFileInfo.cs" />
     <Compile Include="Files\FilesUtiles.cs" />
     <Compile Include="Log.cs" />

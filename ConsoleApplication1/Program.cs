@@ -10,7 +10,7 @@ namespace SubtitlesDownloader
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            new Downloader().Download(@"C:\Users\dell\Desktop\Movies");
+            new MoviesDownloader().DownloadAll(@"C:\Users\dell\Desktop\Movies");
 
             sw.Stop();
             TimeSpan elapsedTime = sw.Elapsed;
