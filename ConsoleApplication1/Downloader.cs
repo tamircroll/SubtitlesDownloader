@@ -10,7 +10,6 @@ namespace SubtitlesDownloader
         public void Download(string i_Folder)
         {
             List<string> languages = new List<string> {"Hebrew", "English"};
-
             List<string> allMovies = new FilesUtiles().getAllMoviefilesInFolder(i_Folder, true);
 
             foreach (string file in allMovies)

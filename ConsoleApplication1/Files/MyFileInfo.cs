@@ -12,7 +12,7 @@ namespace SubtitlesDownloader.Files
 
         public string FilePath { get; private set; }
 
-        public string getFileFoler()
+        public string getFileFolder()
         {
             return Path.GetDirectoryName(FilePath);
         }
@@ -24,7 +24,7 @@ namespace SubtitlesDownloader.Files
 
         public string PathToFileWithOutExtention()
         {
-            return getFileFoler() + @"\" + getFileName();
+            return getFileFolder() + @"\" + getFileName();
         }
 
         public string GetDirectoryName()

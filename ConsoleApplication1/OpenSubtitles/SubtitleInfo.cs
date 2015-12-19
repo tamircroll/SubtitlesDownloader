@@ -10,12 +10,12 @@ namespace SubtitlesDownloader.OpenSubtitles
 
     public class SubtitleInfo
     {
-        public SubtitleInfo(XmlNode i_XmlData, MovieFileInfo i_MovieFileInfo)
+        public SubtitleInfo(XmlNode i_XmlData, MovieFileInfo i_MovieFileInfo, MyFileInfo i_SrtFileInfo)
         {
             XmlData = i_XmlData;
             MovieFile = i_MovieFileInfo;
-            ZipFile = new MyFileInfo(string.Format(@"{0}\tempFolder{1}\{1}.zip", MovieFile.getFileFoler(), MovieFile.getFileName()));
-            SrtFile = new MyFileInfo(String.Format(@"{0}.srt", MovieFile.PathToFileWithOutExtention()));
+            ZipFile = new MyFileInfo(string.Format(@"{0}\tempFolder{1}\{1}.zip", MovieFile.getFileFolder(), MovieFile.getFileName()));
+            SrtFile = i_SrtFileInfo;
             XmlNodeList xmlMembersList = XmlData.FirstChild.ChildNodes;
             Id = XmlUtiles.getMemberValueByName(xmlMembersList, "IDSubtitleFile");
             LinkToDownload = XmlUtiles.getMemberValueByName(xmlMembersList, "ZipDownloadLink");

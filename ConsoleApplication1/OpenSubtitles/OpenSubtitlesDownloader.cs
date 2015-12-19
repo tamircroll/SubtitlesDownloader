@@ -4,28 +4,38 @@ namespace SubtitlesDownloader.OpenSubtitles
 {
     public class OpenSubtitlesDownloader
     {
-        private readonly RestApi.RestApi m_RestApi = new RestApi.RestApi();
-        private readonly string m_OpensubtitlesUrl = @"http://api.opensubtitles.org:80/xml-rpc";
+        private static string s_Token;
 
-        public string GetToken()
+        private readonly RestApi.RestApi m_RestApi = new RestApi.RestApi();
+        private static readonly string m_OpensubtitlesUrl = @"http://api.opensubtitles.org:80/xml-rpc";
+
+        static OpenSubtitlesDownloader()
         {
-            string responseFromServer = m_RestApi.sendPostRequest(m_OpensubtitlesUrl, getTokenXMLRequest);
+            setToken();
+        }
+
+        private static void setToken()
+        {
+            string responseFromServer = new RestApi.RestApi().sendPostRequest(m_OpensubtitlesUrl, getTokenXMLRequest);
 
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(responseFromServer);
 
-            XmlNode firstChild = xmlDoc.GetElementsByTagName("string")[0];
-
-            return firstChild.InnerText;
+            s_Token = xmlDoc.GetElementsByTagName("string")[0].InnerText;
         }
 
-        public string getSearchResult(string i_Hash, string i_Token, string i_FileLength)
+        public static void SignOut()
         {
-            string searchSubsXml = string.Format(serachSubsRequestXml, i_Token, i_Hash, i_FileLength);
+            new RestApi.RestApi().sendPostRequest(m_OpensubtitlesUrl, string.Format(SignOutXmlRequest, s_Token));
+        }
+
+        public string getSearchResult(string i_Hash, string i_FileLength)
+        {
+            string searchSubsXml = string.Format(serachSubsRequestXml, s_Token, i_Hash, i_FileLength);
             return m_RestApi.sendPostRequest(m_OpensubtitlesUrl, searchSubsXml);
         }
 
-        private readonly string getTokenXMLRequest =
+        private static readonly string getTokenXMLRequest =
             @"<methodCall>
  <methodName>LogIn</methodName>
  <params>
@@ -44,7 +54,16 @@ namespace SubtitlesDownloader.OpenSubtitles
  </params>
 </methodCall>";
 
-//   <value><string>SolEol 0.0.8</string></value>
+
+        private static readonly string SignOutXmlRequest = 
+@"<methodCall>
+ <methodName>LogOut</methodName>
+ <params>
+  <param>
+   <value><string>{0}</string></value>
+  </param>
+ </params>
+</methodCall>";
 
         private readonly string serachSubsRequestXml =
             @"<methodCall>

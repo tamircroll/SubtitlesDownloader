@@ -10,11 +10,14 @@ namespace SubtitlesDownloader.OpenSubtitles
         private MovieFileInfo m_MovieFileInfo;
         private List<SubtitleInfo> m_AllSubtitlesInfos = new List<SubtitleInfo>();
         private OpenSubtitlesDownloader m_Downloader;
+        private MyFileInfo m_SrtFile;
 
-        public AllSubtitlesInfo(OpenSubtitlesDownloader i_Downloader, MovieFileInfo i_MovieFileInfo)
+        public AllSubtitlesInfo(OpenSubtitlesDownloader i_Downloader, MovieFileInfo i_MovieFileInfo, MyFileInfo i_SrtFile)
         {
             m_Downloader = i_Downloader;
             m_MovieFileInfo = i_MovieFileInfo;
+            m_SrtFile = i_SrtFile;
+
             setAllSubsInfo();
         }
 
@@ -25,8 +28,7 @@ namespace SubtitlesDownloader.OpenSubtitles
 
         private void setAllSubsInfo()
         {
-            string token = m_Downloader.GetToken();
-            string searchResult = m_Downloader.getSearchResult(m_MovieFileInfo.Hash, token, m_MovieFileInfo.Length.ToString());
+            string searchResult = m_Downloader.getSearchResult(m_MovieFileInfo.Hash, m_MovieFileInfo.Length.ToString());
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(searchResult);
             XmlNode xmlMainData = xmlDoc.GetElementsByTagName("data")[0];
@@ -34,14 +36,13 @@ namespace SubtitlesDownloader.OpenSubtitles
 
             foreach (XmlNode subtitleXml in subtitleXmlsList)
             {
-                SubtitleInfo subtitleInfo = new SubtitleInfo(subtitleXml, m_MovieFileInfo);
+                SubtitleInfo subtitleInfo = new SubtitleInfo(subtitleXml, m_MovieFileInfo, m_SrtFile);
                 m_AllSubtitlesInfos.Add(subtitleInfo);
             }
         }
 
         public List<SubtitleInfo> getFilteredByLanguage(string i_Language)
         {
-            if (m_AllSubtitlesInfos == null) setAllSubsInfo();
             return m_AllSubtitlesInfos.Where(info => info.Languagh.ToLower() == i_Language.ToLower()).ToList();
         }
     }

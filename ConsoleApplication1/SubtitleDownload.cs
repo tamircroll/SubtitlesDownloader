@@ -8,27 +8,29 @@ namespace SubtitlesDownloader
 
     public class SubtitleDownload //TODO Therads
     {
-
         public bool Download(MovieFileInfo i_FileInfo, List<string> i_Languages)
         {
-            if (FilesUtiles.FileExisits(i_FileInfo)) return true;
+            MyFileInfo SrtFile = new MyFileInfo(string.Format(@"{0}.srt", i_FileInfo.PathToFileWithOutExtention()));
+
+            if (FilesUtiles.FileExisits(SrtFile)) return true;
 
             foreach (string language in i_Languages)
             {
-                bool downloaded = DownloadSubsInLanguage(i_FileInfo, language);
+                bool downloaded = DownloadSubsInLanguage(i_FileInfo, SrtFile, language);
                 if (downloaded) return true;
             }
 
             return false;
         }
 
-        public bool DownloadSubsInLanguage(MovieFileInfo i_File, string i_Language)
+        public bool DownloadSubsInLanguage(MovieFileInfo i_File, MyFileInfo i_SrtFile, string i_Language)
         {
-            AllSubtitlesInfo subtitlesInfo = new AllSubtitlesInfo(new OpenSubtitlesDownloader(), i_File);
+            AllSubtitlesInfo subtitlesInfo = new AllSubtitlesInfo(new OpenSubtitlesDownloader(), i_File, i_SrtFile);
             List<SubtitleInfo> filteredSubs = subtitlesInfo.getFilteredByLanguage(i_Language);
 
             if (filteredSubs.Count > 0)
             {
+                Console.WriteLine("Movie: " + i_File.getFileName());
                 return tryDownloadAny(filteredSubs);
             }
 
