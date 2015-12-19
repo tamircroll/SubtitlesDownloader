@@ -14,8 +14,8 @@ namespace SubtitlesDownloader.OpenSubtitles
         {
             XmlData = i_XmlData;
             MovieFile = i_MovieFileInfo;
-            ZipFile = new MyFileInfo(MovieFile.getFileFoler() + @"\tempFolder\" + MovieFile.getFileName() + @".zip");
-            SrtFile = new MyFileInfo(MovieFile.PathToFileWithOutExtention() + @".srt");
+            ZipFile = new MyFileInfo(string.Format(@"{0}\tempFolder{1}\{1}.zip", MovieFile.getFileFoler(), MovieFile.getFileName()));
+            SrtFile = new MyFileInfo(String.Format(@"{0}.srt", MovieFile.PathToFileWithOutExtention()));
             XmlNodeList xmlMembersList = XmlData.FirstChild.ChildNodes;
             Id = XmlUtiles.getMemberValueByName(xmlMembersList, "IDSubtitleFile");
             LinkToDownload = XmlUtiles.getMemberValueByName(xmlMembersList, "ZipDownloadLink");

@@ -39,10 +39,12 @@ namespace SubtitlesDownloader.OpenSubtitles
    <value><string>heb,eng</string></value>
   </param>
   <param>
-   <value><string>SolEol 0.0.8</string></value>
+   <value><string>TheSubsDownloader</string></value>
   </param>
  </params>
 </methodCall>";
+
+//   <value><string>SolEol 0.0.8</string></value>
 
         private readonly string serachSubsRequestXml =
             @"<methodCall>

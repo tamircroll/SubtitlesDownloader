@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{35F731C5-411E-48F4-BB63-B31091917F38}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SubtitlesDownloader</RootNamespace>
     <AssemblyName>SubtitlesDownloader</AssemblyName>
@@ -46,8 +46,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Downloader.cs" />
     <Compile Include="Files\MyFileInfo.cs" />
     <Compile Include="Files\FilesUtiles.cs" />
+    <Compile Include="Log.cs" />
+    <Compile Include="SubtitleDownload.cs" />
     <Compile Include="Utilities\HashCoder.cs" />
     <Compile Include="Files\MovieFileInfo.cs" />
     <Compile Include="OpenSubtitles\AllSubtitlesInfo.cs" />
