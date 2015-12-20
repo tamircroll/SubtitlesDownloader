@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using System.Threading;
 using SubtitlesDownloader.Files;
 using SubtitlesDownloader.OpenSubtitles;
 
@@ -13,7 +15,8 @@ namespace SubtitlesDownloader
         {
             List<string> languages = new List<string> {"Hebrew", "English"};
             List<string> allMovies = new FilesUtiles().getAllMoviefilesInFolder(i_Folder, subFolders);
-            bool shouldSignOut = false;
+            List<Thread> threads = new List<Thread>();
+//            bool shouldSignOut = false;
 
             foreach (string file in allMovies)
             {
@@ -22,19 +25,39 @@ namespace SubtitlesDownloader
 
                 if (FilesUtiles.FileExisits(srtFile)) continue;
 
-                SubtitleDownload subtitleDownload = new SubtitleDownload(fileInfo, languages, srtFile);
-                bool downloaded = subtitleDownload.Download(ref shouldSignOut);
-                
-                if (!downloaded) Console.WriteLine("Failed To download Subtitles to: {0}", fileInfo.getFileName());
+                SubtitleDownload subtitleDownload = getDownloadCreator(srtFile, fileInfo, languages);
+
+//                subtitleDownload.Download();
+
+                Thread oThread = new Thread(subtitleDownload.Download);
+                threads.Add(oThread);
+                oThread.Start();
             }
 
-
-            
-            shouldSignOut = true;// TODO: add logic
-            if (shouldSignOut)
+            foreach (Thread t in threads)
             {
+                t.Join();
+            }
+
+//            shouldSignOut = true;// TODO: add logic
+//            if (shouldSignOut)
+//            {
                 OpenSubtitlesDownloader.SignOut();
-                shouldSignOut = false;
+//                shouldSignOut = false;
+//            }
+        }
+
+        private SubtitleDownload getDownloadCreator(MyFileInfo i_SrtFile, MovieFileInfo i_FileInfo, List<string> i_Languages)
+        {
+            lock (this)
+            {
+                SubtitleDownload subtitleDownload = new SubtitleDownload();
+
+                subtitleDownload.SrtFile = i_SrtFile;
+                subtitleDownload.MovieFile = i_FileInfo;
+                subtitleDownload.Languages = i_Languages;
+                
+                return subtitleDownload;
             }
         }
     }

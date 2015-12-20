@@ -49,7 +49,6 @@ namespace SubtitlesDownloader.OpenSubtitles
             DownloadZipped();
             UnZipp();
             CopyToFileFolder();
-            Console.WriteLine("Downloading {0} subtitles to: {1}", Languagh, MovieFile.getFileName());
             Directory.Delete(ZipFile.GetDirectoryName(), true);
         }
 
