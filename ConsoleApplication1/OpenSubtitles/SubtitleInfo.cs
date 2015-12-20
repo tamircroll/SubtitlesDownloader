@@ -54,8 +54,8 @@ namespace SubtitlesDownloader.OpenSubtitles
 
         private void CopyToFileFolder()
         {
-            string srtFile = new FilesUtiles().getAllFilesWithExtention(ZipFile.GetDirectoryName(), "srt").First();
-            File.Copy(srtFile, SrtFile.FilePath, true);
+            string srtFile = new FilesUtiles().getAllFilesWithExtention(ZipFile.GetDirectoryName(), "srt").FirstOrDefault();
+            if (srtFile != null) File.Copy(srtFile, SrtFile.FilePath, true);
         }
 
         public void DownloadZipped()
