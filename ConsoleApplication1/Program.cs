@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Windows.Forms;
 using SubtitlesDownloader.Forms;
 
 namespace SubtitlesDownloader
@@ -12,13 +13,16 @@ namespace SubtitlesDownloader
             SetupData setupData = new SetupData();
 
             MainForm mainForm = new MainForm(setupData);
-            mainForm.ShowDialog();
+            DialogResult dialogResult = mainForm.ShowDialog();
+
+            if (dialogResult == DialogResult.Cancel) return;
+
             setupData.SaveData();
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            new MoviesDownloader().DownloadAll(setupData.Path);
+            new MoviesDownloader().DownloadAll(setupData);
 
             sw.Stop();
             TimeSpan elapsedTime = sw.Elapsed;

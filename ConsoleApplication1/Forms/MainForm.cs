@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
@@ -24,7 +25,7 @@ namespace SubtitlesDownloader.Forms
             m_FolderDialog.Description = "Choose folder to download subtitles to";
         }
 
-        private void ChooseFolder_Click(object sender, EventArgs e)
+        private void ChooseFolder_Click(object i_Sender, EventArgs i_E)
         {
             if (m_FolderDialog.ShowDialog() == DialogResult.OK)
             {
@@ -50,10 +51,14 @@ namespace SubtitlesDownloader.Forms
                 return;
             }
 
+
             m_SetupData.Path = FolderTextBox.Text;
             m_SetupData.BackgroundRun = RunInBackgroud.Checked ? SetupData.trueStr : SetupData.falseStr;
             m_SetupData.NoSubFolders = NoSubFolders.Checked ? SetupData.trueStr : SetupData.falseStr;
-            m_SetupData.Languages = new[] {"hebrew", "english"};
+            m_SetupData.Languages = new List<string> {"hebrew", "english"};
+            
+            DialogResult = DialogResult.OK;
+            
             Close();
         }
     }

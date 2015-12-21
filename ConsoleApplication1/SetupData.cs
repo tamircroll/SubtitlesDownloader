@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -27,7 +28,7 @@ namespace SubtitlesDownloader
         }
 
         public string Path { get; set; }
-        public string[] Languages { get; set; }
+        public List<string> Languages { get; set; }
         public string NoSubFolders { get; set; }
         public string BackgroundRun { get; set; }
 
@@ -42,7 +43,7 @@ namespace SubtitlesDownloader
             }
 
             Path = allDataLines[(int) DataType.Path];
-            Languages = allDataLines[(int) DataType.Languages].Split(',');
+            Languages = allDataLines[(int) DataType.Languages].Split(',').ToList();
             NoSubFolders = allDataLines[(int) DataType.SubFolders];
             BackgroundRun = allDataLines[(int) DataType.BackgroundRun];
         }
@@ -50,7 +51,7 @@ namespace SubtitlesDownloader
         private void InitNewDataFile()
         {
             Path = @"C:\";
-            Languages = new[] {"hebrew", "english"};
+            Languages = new List<string> {"hebrew", "english"};
             NoSubFolders = trueStr;
             BackgroundRun = falseStr;
 
@@ -64,7 +65,7 @@ namespace SubtitlesDownloader
 
         public override string ToString()
         {
-            if (Path == null || Languages == null || Languages.Length == 0 || NoSubFolders == null ||
+            if (Path == null || Languages == null || Languages.Count == 0 || NoSubFolders == null ||
                 BackgroundRun == null)
                 populateVariables();
 

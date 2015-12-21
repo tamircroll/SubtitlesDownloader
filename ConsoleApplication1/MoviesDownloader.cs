@@ -9,10 +9,9 @@ namespace SubtitlesDownloader
     {
         bool subFolders = true;
 
-        public void DownloadAll(string i_Folder)
+        public void DownloadAll(SetupData i_SetupData)
         {
-            List<string> languages = new List<string> {"Hebrew", "English"};
-            List<string> allMovies = new FilesUtiles().getAllMoviefilesInFolder(i_Folder, subFolders);
+            List<string> allMovies = new FilesUtiles().getAllMoviefilesInFolder(i_SetupData.Path, subFolders);
             List<Thread> threads = new List<Thread>();
 
             foreach (string file in allMovies)
@@ -22,7 +21,7 @@ namespace SubtitlesDownloader
 
                 if (FilesUtiles.FileExisits(srtFile)) continue;
 
-                SubtitleDownload subtitleDownload = getInitSubtitleDownload(srtFile, fileInfo, languages);
+                SubtitleDownload subtitleDownload = getInitSubtitleDownload(srtFile, fileInfo, i_SetupData.Languages);
 
                 Thread oThread = new Thread(subtitleDownload.Download);
                 threads.Add(oThread);
