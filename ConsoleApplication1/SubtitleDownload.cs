@@ -8,6 +8,8 @@ namespace SubtitlesDownloader
 
     public class SubtitleDownload
     {
+        private AllSubtitlesInfo m_SubtitlesInfo;
+
         public List<string> Languages { get; set; }
 
         public MyFileInfo SrtFile { get; set; }
@@ -18,8 +20,8 @@ namespace SubtitlesDownloader
         {
             if (FilesUtiles.FileExisits(SrtFile)) return;
             bool succeed = false;
-            Console.WriteLine("Starting downloading : {0}", MovieFile.getFileName());
 
+            m_SubtitlesInfo = new AllSubtitlesInfo(new OpenSubtitlesDataFetcher(), MovieFile, SrtFile);
 
             foreach (string language in Languages)
             {
@@ -27,23 +29,20 @@ namespace SubtitlesDownloader
                 if (downloaded) succeed = true;
             }
 
-            if (succeed) Console.WriteLine("Done downloading : {0}", MovieFile.getFileName());
             if (!succeed) Console.WriteLine("Failed To download Subtitles to: {0}", MovieFile.getFileName());
         }
 
         private bool DownloadSubsInLanguage(string i_Language)
         {
-            AllSubtitlesInfo subtitlesInfo = new AllSubtitlesInfo(new OpenSubtitlesDownloader(), MovieFile, SrtFile);
-            List<SubtitleInfo> filteredSubs = subtitlesInfo.getFilteredByLanguage(i_Language);
+            List<SubtitleInfo> filteredSubs = m_SubtitlesInfo.getFilteredByLanguage(i_Language);
 
-            if (filteredSubs.Count > 0)
+            if (filteredSubs.Count == 0)
             {
-                return tryDownloadAny(filteredSubs);
+                Console.WriteLine("{0} - No Subs in language: {1} Exsists", MovieFile.getFileName(), i_Language);
+                return false;
             }
-            
-            Console.WriteLine("{0} No Subs in language: {1} Exsists", MovieFile.getFileName(), i_Language);
 
-            return false;
+            return tryDownloadAny(filteredSubs);
         }
 
         private bool tryDownloadAny(List<SubtitleInfo> i_FilteredSubs)
@@ -56,7 +55,7 @@ namespace SubtitlesDownloader
                 }
                 catch (Exception e)
                 {
-                    string continueMsg = (i + 1 < i_FilteredSubs.Count) ? "keep trying" : "No more tries";
+                    string continueMsg = (i + 1 < i_FilteredSubs.Count) ? "Keep trying" : "No more tries";
                     Console.WriteLine("Error occurred in: {0}({1}). Error msg: {2}, {3}",
                         i_FilteredSubs[i].MovieFile.getFileName(), i_FilteredSubs[i].Languagh, e.Message, continueMsg);
                 }

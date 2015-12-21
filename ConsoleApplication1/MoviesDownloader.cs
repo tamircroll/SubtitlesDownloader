@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
+﻿using System.Collections.Generic;
 using System.Threading;
 using SubtitlesDownloader.Files;
 using SubtitlesDownloader.OpenSubtitles;
@@ -16,7 +14,6 @@ namespace SubtitlesDownloader
             List<string> languages = new List<string> {"Hebrew", "English"};
             List<string> allMovies = new FilesUtiles().getAllMoviefilesInFolder(i_Folder, subFolders);
             List<Thread> threads = new List<Thread>();
-//            bool shouldSignOut = false;
 
             foreach (string file in allMovies)
             {
@@ -25,38 +22,34 @@ namespace SubtitlesDownloader
 
                 if (FilesUtiles.FileExisits(srtFile)) continue;
 
-                SubtitleDownload subtitleDownload = getDownloadCreator(srtFile, fileInfo, languages);
-
-//                subtitleDownload.Download();
+                SubtitleDownload subtitleDownload = getInitSubtitleDownload(srtFile, fileInfo, languages);
 
                 Thread oThread = new Thread(subtitleDownload.Download);
                 threads.Add(oThread);
                 oThread.Start();
+
+                Thread.Sleep(500);
             }
 
             foreach (Thread t in threads)
             {
                 t.Join();
             }
-
-//            shouldSignOut = true;// TODO: add logic
-//            if (shouldSignOut)
-//            {
-                OpenSubtitlesDownloader.SignOut();
-//                shouldSignOut = false;
-//            }
+               
+            OpenSubtitlesDataFetcher.SignOut();
         }
 
-        private SubtitleDownload getDownloadCreator(MyFileInfo i_SrtFile, MovieFileInfo i_FileInfo, List<string> i_Languages)
+        private SubtitleDownload getInitSubtitleDownload(MyFileInfo i_SrtFile, MovieFileInfo i_FileInfo, List<string> i_Languages)
         {
             lock (this)
             {
-                SubtitleDownload subtitleDownload = new SubtitleDownload();
+                SubtitleDownload subtitleDownload = new SubtitleDownload
+                {
+                    SrtFile = i_SrtFile,
+                    MovieFile = i_FileInfo,
+                    Languages = i_Languages
+                };
 
-                subtitleDownload.SrtFile = i_SrtFile;
-                subtitleDownload.MovieFile = i_FileInfo;
-                subtitleDownload.Languages = i_Languages;
-                
                 return subtitleDownload;
             }
         }

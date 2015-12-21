@@ -46,10 +46,17 @@ namespace SubtitlesDownloader.OpenSubtitles
 
         public void DownloadFile()
         {
-            DownloadZipped();
-            UnZipp();
-            CopyToFileFolder();
-            Directory.Delete(ZipFile.GetDirectoryName(), true);
+            try
+            {
+                DownloadZipped();
+                UnZipp();
+                CopyToFileFolder();
+            }
+            finally
+            {
+                if (Directory.Exists(ZipFile.GetDirectoryName()))
+                    Directory.Delete(ZipFile.GetDirectoryName(), true);
+            }
         }
 
         private void CopyToFileFolder()

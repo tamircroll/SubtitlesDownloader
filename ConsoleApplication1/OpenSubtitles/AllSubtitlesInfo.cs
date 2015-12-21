@@ -9,10 +9,10 @@ namespace SubtitlesDownloader.OpenSubtitles
     {
         private MovieFileInfo m_MovieFileInfo;
         private List<SubtitleInfo> m_AllSubtitlesInfos = new List<SubtitleInfo>();
-        private OpenSubtitlesDownloader m_Downloader;
+        private OpenSubtitlesDataFetcher m_Downloader;
         private MyFileInfo m_SrtFile;
 
-        public AllSubtitlesInfo(OpenSubtitlesDownloader i_Downloader, MovieFileInfo i_MovieFileInfo, MyFileInfo i_SrtFile)
+        public AllSubtitlesInfo(OpenSubtitlesDataFetcher i_Downloader, MovieFileInfo i_MovieFileInfo, MyFileInfo i_SrtFile)
         {
             m_Downloader = i_Downloader;
             m_MovieFileInfo = i_MovieFileInfo;

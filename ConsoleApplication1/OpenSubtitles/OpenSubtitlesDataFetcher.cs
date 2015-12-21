@@ -2,19 +2,14 @@
 
 namespace SubtitlesDownloader.OpenSubtitles
 {
-    public class OpenSubtitlesDownloader
+    public class OpenSubtitlesDataFetcher
     {
         private static string s_Token;
 
         private readonly RestApi.RestApi m_RestApi = new RestApi.RestApi();
         private static readonly string m_OpensubtitlesUrl = @"http://api.opensubtitles.org:80/xml-rpc";
 
-        static OpenSubtitlesDownloader()
-        {
-            setToken();
-        }
-
-        private static void setToken()
+        private void setToken()
         {
             string responseFromServer = new RestApi.RestApi().sendPostRequest(m_OpensubtitlesUrl, getTokenXMLRequest);
 
@@ -26,11 +21,13 @@ namespace SubtitlesDownloader.OpenSubtitles
 
         public static void SignOut()
         {
-            new RestApi.RestApi().sendPostRequest(m_OpensubtitlesUrl, string.Format(SignOutXmlRequest, s_Token));
+            if (s_Token != null)
+                new RestApi.RestApi().sendPostRequest(m_OpensubtitlesUrl, string.Format(SignOutXmlRequest, s_Token));
         }
 
         public string getSearchResult(string i_Hash, string i_FileLength)
         {
+            if (s_Token == null) setToken();
             string searchSubsXml = string.Format(serachSubsRequestXml, s_Token, i_Hash, i_FileLength);
             return m_RestApi.sendPostRequest(m_OpensubtitlesUrl, searchSubsXml);
         }
