@@ -11,10 +11,11 @@ namespace SubtitlesDownloader
 
         public void DownloadAll(SetupData i_SetupData)
         {
+
             do
             {
                 downloadAllFilesOnce(i_SetupData);
-                if (i_SetupData.BackgroundRun == SetupData.falseStr) return;
+                if (i_SetupData.BackgroundRun == false) break;
                 Thread.Sleep(3000);
             } while (true);
 
@@ -23,7 +24,7 @@ namespace SubtitlesDownloader
 
         private void downloadAllFilesOnce(SetupData i_SetupData)
         {
-            List<string> allMovies = new FilesUtiles().getAllMoviefilesInFolder(i_SetupData.Path, subFolders);
+            List<string> allMovies = new FilesUtiles().getAllMoviefilesInFolder(i_SetupData.Path, i_SetupData.NoSubFolders);
             List<Thread> threads = new List<Thread>();
 
             foreach (string file in allMovies)

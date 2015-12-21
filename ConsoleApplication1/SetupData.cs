@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using SubtitlesDownloader.Enums;
 
 namespace SubtitlesDownloader
@@ -29,8 +28,8 @@ namespace SubtitlesDownloader
 
         public string Path { get; set; }
         public List<string> Languages { get; set; }
-        public string NoSubFolders { get; set; }
-        public string BackgroundRun { get; set; }
+        public bool NoSubFolders { get; set; }
+        public bool BackgroundRun { get; set; }
 
         private void populateVariables()
         {
@@ -44,16 +43,16 @@ namespace SubtitlesDownloader
 
             Path = allDataLines[(int) DataType.Path];
             Languages = allDataLines[(int) DataType.Languages].Split(',').ToList();
-            NoSubFolders = allDataLines[(int) DataType.SubFolders];
-            BackgroundRun = allDataLines[(int) DataType.BackgroundRun];
+            NoSubFolders = allDataLines[(int) DataType.SubFolders] == trueStr;
+            BackgroundRun = allDataLines[(int) DataType.BackgroundRun] == trueStr;
         }
 
         private void InitNewDataFile()
         {
             Path = @"C:\";
             Languages = new List<string> {"hebrew", "english"};
-            NoSubFolders = trueStr;
-            BackgroundRun = falseStr;
+            NoSubFolders = true;
+            BackgroundRun = false;
 
             SaveData();
         }
@@ -65,8 +64,7 @@ namespace SubtitlesDownloader
 
         public override string ToString()
         {
-            if (Path == null || Languages == null || Languages.Count == 0 || NoSubFolders == null ||
-                BackgroundRun == null)
+            if (Path == null || Languages == null || Languages.Count == 0)
                 populateVariables();
 
             string langsStr = Languages[0];

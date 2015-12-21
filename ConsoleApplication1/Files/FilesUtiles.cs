@@ -24,9 +24,9 @@ namespace SubtitlesDownloader.Files
             return File.Exists(string.Format("{0}.srt", i_File.PathToFileWithOutExtention()));
         }
 
-        public List<string> getAllMoviefilesInFolder(string i_FolderPath, bool subFolders)
+        public List<string> getAllMoviefilesInFolder(string i_FolderPath, bool noSubFolders)
         {
-            SearchOption allDirectories = subFolders? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+            SearchOption allDirectories = noSubFolders ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories;
             string[] allFilesArr = Directory.GetFiles(i_FolderPath, "*.*", allDirectories);
 
             return allFilesArr.Where(file => videoExtentions.Contains(Path.GetExtension(file).ToLower())).ToList();
