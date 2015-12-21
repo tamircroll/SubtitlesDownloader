@@ -1,4 +1,5 @@
-﻿using SubtitlesDownloader.Files;
+﻿using System.Collections.Concurrent;
+using SubtitlesDownloader.Files;
 using SubtitlesDownloader.OpenSubtitles;
 
 namespace SubtitlesDownloader
@@ -16,6 +17,8 @@ namespace SubtitlesDownloader
 
         public MovieFileInfo MovieFile { get; set; }
 
+        public BlockingCollection<string> FailingMovies { get; set; }
+
         public void Download()
         {
             if (FilesUtiles.FileExisits(SrtFile)) return;
@@ -27,17 +30,26 @@ namespace SubtitlesDownloader
             }
             catch (Exception)
             {
-                Console.WriteLine("Error occurred with file: {0}", MovieFile.getFileName());
+                Console.WriteLine("Error occurred with file: {0}. Trying To re-signin", MovieFile.getFileName());
+
                 return;
             }
 
             foreach (string language in Languages)
             {
                 bool downloaded = DownloadSubsInLanguage(language);
-                if (downloaded) succeed = true;
+                if (downloaded)
+                {
+                    succeed = true;
+                    break;
+                }
             }
 
-            if (!succeed) Console.WriteLine("Failed To download Subtitles to: {0}", MovieFile.getFileName());
+            if (!succeed)
+            {
+                FailingMovies.Add(MovieFile.FilePath);
+                Console.WriteLine("Failed To download Subtitles to: {0}", MovieFile.getFileName());
+            }
         }
 
         private bool DownloadSubsInLanguage(string i_Language)

@@ -51,11 +51,10 @@ namespace SubtitlesDownloader.Forms
                 return;
             }
 
-
             m_SetupData.Path = FolderTextBox.Text;
             m_SetupData.BackgroundRun = RunInBackgroud.Checked;
             m_SetupData.NoSubFolders = NoSubFolders.Checked;
-            m_SetupData.Languages = new List<string> {"hebrew", "english"};
+            m_SetupData.Languages = new List<string> { "hebrew", "english"};
             
             DialogResult = DialogResult.OK;
             

@@ -22,7 +22,7 @@ namespace SubtitlesDownloader
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            new MoviesDownloader().DownloadAll(setupData);
+            new SubtitlesDownloader().DownloadAll(setupData);
 
             sw.Stop();
             TimeSpan elapsedTime = sw.Elapsed;

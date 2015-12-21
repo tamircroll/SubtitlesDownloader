@@ -55,7 +55,7 @@
     <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MoviesDownloader.cs" />
+    <Compile Include="SubtitlesDownloader.cs" />
     <Compile Include="Files\MyFileInfo.cs" />
     <Compile Include="Files\FilesUtiles.cs" />
     <Compile Include="Log.cs" />

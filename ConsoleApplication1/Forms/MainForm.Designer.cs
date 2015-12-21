@@ -34,9 +34,9 @@
             this.RunInBackgroud.Cursor = System.Windows.Forms.Cursors.Hand;
             this.RunInBackgroud.Location = new System.Drawing.Point(35, 230);
             this.RunInBackgroud.Name = "RunInBackgroud";
-            this.RunInBackgroud.Size = new System.Drawing.Size(137, 17);
+            this.RunInBackgroud.Size = new System.Drawing.Size(121, 17);
             this.RunInBackgroud.TabIndex = 0;
-            this.RunInBackgroud.Text = "To Run In BackGround";
+            this.RunInBackgroud.Text = "Run In BackGround";
             this.RunInBackgroud.UseVisualStyleBackColor = true;
             this.RunInBackgroud.CheckedChanged += new System.EventHandler(this.RunInBackground_CheckedChanged);
             // 
