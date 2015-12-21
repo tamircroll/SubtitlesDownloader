@@ -11,6 +11,18 @@ namespace SubtitlesDownloader
 
         public void DownloadAll(SetupData i_SetupData)
         {
+            do
+            {
+                downloadAllFilesOnce(i_SetupData);
+                if (i_SetupData.BackgroundRun == SetupData.falseStr) return;
+                Thread.Sleep(3000);
+            } while (true);
+
+            OpenSubtitlesDataFetcher.SignOut();
+        }
+
+        private void downloadAllFilesOnce(SetupData i_SetupData)
+        {
             List<string> allMovies = new FilesUtiles().getAllMoviefilesInFolder(i_SetupData.Path, subFolders);
             List<Thread> threads = new List<Thread>();
 
@@ -34,8 +46,7 @@ namespace SubtitlesDownloader
             {
                 t.Join();
             }
-               
-            OpenSubtitlesDataFetcher.SignOut();
+
         }
 
         private SubtitleDownload getInitSubtitleDownload(MyFileInfo i_SrtFile, MovieFileInfo i_FileInfo, List<string> i_Languages)

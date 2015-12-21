@@ -21,7 +21,15 @@ namespace SubtitlesDownloader
             if (FilesUtiles.FileExisits(SrtFile)) return;
             bool succeed = false;
 
-            m_SubtitlesInfo = new AllSubtitlesInfo(new OpenSubtitlesDataFetcher(), MovieFile, SrtFile);
+            try
+            {
+                m_SubtitlesInfo = new AllSubtitlesInfo(new OpenSubtitlesDataFetcher(), MovieFile, SrtFile);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error occurred with file: {0}", MovieFile.getFileName());
+                return;
+            }
 
             foreach (string language in Languages)
             {

@@ -31,7 +31,7 @@ namespace SubtitlesDownloader.OpenSubtitles
             string searchResult = m_Downloader.getSearchResult(m_MovieFileInfo.Hash, m_MovieFileInfo.Length.ToString());
             var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(searchResult);
-            XmlNode xmlMainData = xmlDoc.GetElementsByTagName("data")[0];
+            XmlNode xmlMainData = xmlDoc.GetElementsByTagName("data")[0];  //TODO: may not return valid value
             XmlNodeList subtitleXmlsList = xmlMainData.ChildNodes;
 
             foreach (XmlNode subtitleXml in subtitleXmlsList)
