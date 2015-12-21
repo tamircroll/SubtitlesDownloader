@@ -9,7 +9,7 @@ namespace SubtitlesDownloader.OpenSubtitles
         private readonly RestApi.RestApi m_RestApi = new RestApi.RestApi();
         private static readonly string m_OpensubtitlesUrl = @"http://api.opensubtitles.org:80/xml-rpc";
 
-        private void setToken()
+        private static void setToken()
         {
             string responseFromServer = new RestApi.RestApi().sendPostRequest(m_OpensubtitlesUrl, getTokenXMLRequest);
 

@@ -42,11 +42,11 @@
             // 
             // ChooseFolder
             // 
-            this.ChooseFolder.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.ChooseFolder.BackColor = System.Drawing.Color.PeachPuff;
             this.ChooseFolder.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ChooseFolder.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ChooseFolder.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.ChooseFolder.Location = new System.Drawing.Point(201, 96);
+            this.ChooseFolder.Location = new System.Drawing.Point(193, 96);
             this.ChooseFolder.Name = "ChooseFolder";
             this.ChooseFolder.Size = new System.Drawing.Size(180, 36);
             this.ChooseFolder.TabIndex = 1;
@@ -68,7 +68,7 @@
             // 
             // StartBtn
             // 
-            this.StartBtn.BackColor = System.Drawing.SystemColors.Highlight;
+            this.StartBtn.BackColor = System.Drawing.Color.DarkSeaGreen;
             this.StartBtn.Font = new System.Drawing.Font("Minion Pro", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.StartBtn.ForeColor = System.Drawing.SystemColors.InactiveCaptionText;
             this.StartBtn.Location = new System.Drawing.Point(127, 301);
@@ -93,6 +93,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.Silver;
             this.ClientSize = new System.Drawing.Size(578, 368);
             this.Controls.Add(this.FolderTextBox);
             this.Controls.Add(this.StartBtn);

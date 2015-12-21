@@ -24,32 +24,16 @@ namespace SubtitlesDownloader
             if (FilesUtiles.FileExisits(SrtFile)) return;
             bool succeed = false;
 
-            try
-            {
-                m_SubtitlesInfo = new AllSubtitlesInfo(new OpenSubtitlesDataFetcher(), MovieFile, SrtFile);
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Error occurred with file: {0}. Trying To re-signin", MovieFile.getFileName());
-
-                return;
-            }
+            if (!trySetSubtitlesInfo()) return;
 
             foreach (string language in Languages)
             {
                 bool downloaded = DownloadSubsInLanguage(language);
-                if (downloaded)
-                {
-                    succeed = true;
-                    break;
-                }
+                if (downloaded) return;
             }
 
-            if (!succeed)
-            {
-                FailingMovies.Add(MovieFile.FilePath);
-                Console.WriteLine("Failed To download Subtitles to: {0}", MovieFile.getFileName());
-            }
+            FailingMovies.Add(MovieFile.FilePath);
+            Console.WriteLine("Failed To download Subtitles to: {0}", MovieFile.getFileName());
         }
 
         private bool DownloadSubsInLanguage(string i_Language)
@@ -84,6 +68,21 @@ namespace SubtitlesDownloader
             }
 
             return false;
+        }
+
+        private bool trySetSubtitlesInfo()
+        {
+            try
+            {
+                m_SubtitlesInfo = new AllSubtitlesInfo(new OpenSubtitlesDataFetcher(), MovieFile, SrtFile);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error occurred with file: {0}. Trying To re-signin", MovieFile.getFileName());
+                return false;
+            }
+
+            return true;
         }
     }
 }
