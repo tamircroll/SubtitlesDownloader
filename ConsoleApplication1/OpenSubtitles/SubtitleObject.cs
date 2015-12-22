@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Net;
 using System.Xml;
@@ -8,13 +7,13 @@ using SubtitlesDownloader.Files;
 namespace SubtitlesDownloader.OpenSubtitles
 {
 
-    public class SubtitleInfo
+    public class SubtitleObject
     {
-        public SubtitleInfo(XmlNode i_XmlData, MovieFileInfo i_MovieFileInfo, MyFileInfo i_SrtFileInfo)
+        public SubtitleObject(XmlNode i_XmlData, MovieFileInfo i_MovieFileInfo, MyFileInfo i_SrtFileInfo)
         {
             XmlData = i_XmlData;
             MovieFile = i_MovieFileInfo;
-            ZipFile = new MyFileInfo(string.Format(@"{0}\tempFolder{1}\{1}.zip", MovieFile.getFileFolder(), MovieFile.getFileName()));
+            ZipFile = new MyFileInfo(string.Format(@"{0}\tempFolder{1}\{1}.zip", MovieFile.getFolderPath(), MovieFile.getFileName()));
             SrtFile = i_SrtFileInfo;
             XmlNodeList xmlMembersList = XmlData.FirstChild.ChildNodes;
             Id = XmlUtiles.getMemberValueByName(xmlMembersList, "IDSubtitleFile");
@@ -54,14 +53,14 @@ namespace SubtitlesDownloader.OpenSubtitles
             }
             finally
             {
-                if (Directory.Exists(ZipFile.GetDirectoryName()))
-                    Directory.Delete(ZipFile.GetDirectoryName(), true);
+                if (Directory.Exists(ZipFile.getFolderPath()))
+                    Directory.Delete(ZipFile.getFolderPath(), true);
             }
         }
 
         private void CopyToFileFolder()
         {
-            string srtFile = new FilesUtiles().getAllFilesWithExtention(ZipFile.GetDirectoryName(), "srt").FirstOrDefault();
+            string srtFile = new FilesUtiles().getAllFilesWithExtention(ZipFile.getFolderPath(), "srt").FirstOrDefault();
             if (srtFile != null) File.Copy(srtFile, SrtFile.FilePath, true);
         }
 
@@ -69,14 +68,14 @@ namespace SubtitlesDownloader.OpenSubtitles
         {
             using (var client = new WebClient())
             {
-                Directory.CreateDirectory(ZipFile.GetDirectoryName());
+                Directory.CreateDirectory(ZipFile.getFolderPath());
                 client.DownloadFile(LinkToDownload, ZipFile.FilePath);
             }
         }
 
         public void UnZipp()
         {
-            System.IO.Compression.ZipFile.ExtractToDirectory(ZipFile.FilePath, ZipFile.GetDirectoryName());
+            System.IO.Compression.ZipFile.ExtractToDirectory(ZipFile.FilePath, ZipFile.getFolderPath());
         }
     }
 }

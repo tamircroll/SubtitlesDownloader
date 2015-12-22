@@ -38,7 +38,7 @@ namespace SubtitlesDownloader
 
         private bool DownloadSubsInLanguage(string i_Language)
         {
-            List<SubtitleInfo> filteredSubs = m_SubtitlesInfo.getFilteredByLanguage(i_Language);
+            List<SubtitleObject> filteredSubs = m_SubtitlesInfo.getFilteredByLanguage(i_Language);
 
             if (filteredSubs.Count == 0)
             {
@@ -49,7 +49,7 @@ namespace SubtitlesDownloader
             return tryDownloadAny(filteredSubs);
         }
 
-        private bool tryDownloadAny(List<SubtitleInfo> i_FilteredSubs)
+        private bool tryDownloadAny(List<SubtitleObject> i_FilteredSubs)
         {
             for (int i = 0; i < i_FilteredSubs.Count; i++)
             {

@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text.RegularExpressions;
 
 namespace SubtitlesDownloader.Files
 {
@@ -10,9 +11,9 @@ namespace SubtitlesDownloader.Files
             FilePath = i_FilePath;
         }
 
-        public string FilePath { get; private set; }
+        public string FilePath { get; set; }
 
-        public string getFileFolder()
+        public string getFolderPath()
         {
             return Path.GetDirectoryName(FilePath);
         }
@@ -24,12 +25,14 @@ namespace SubtitlesDownloader.Files
 
         public string PathToFileWithOutExtention()
         {
-            return getFileFolder() + @"\" + getFileName();
+            return getFolderPath() + @"\" + getFileName();
         }
 
         public string GetDirectoryName()
         {
-            return Path.GetDirectoryName(FilePath);
+            string folderSeperator = @"\\";
+            string[] foldersPath = Regex.Split(FilePath, folderSeperator);
+            return foldersPath[foldersPath.Length - 2];
         }
     }
 }

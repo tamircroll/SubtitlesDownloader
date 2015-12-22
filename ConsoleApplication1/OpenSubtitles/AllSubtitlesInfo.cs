@@ -8,7 +8,7 @@ namespace SubtitlesDownloader.OpenSubtitles
     public class AllSubtitlesInfo
     {
         private MovieFileInfo m_MovieFileInfo;
-        private List<SubtitleInfo> m_AllSubtitlesInfos = new List<SubtitleInfo>();
+        private List<SubtitleObject> m_AllSubtitlesInfos = new List<SubtitleObject>();
         private OpenSubtitlesDataFetcher m_Downloader;
         private MyFileInfo m_SrtFile;
 
@@ -21,7 +21,7 @@ namespace SubtitlesDownloader.OpenSubtitles
             setAllSubsInfo();
         }
 
-        public List<SubtitleInfo> getAll()
+        public List<SubtitleObject> getAll()
         {
             return m_AllSubtitlesInfos;
         }
@@ -36,12 +36,12 @@ namespace SubtitlesDownloader.OpenSubtitles
 
             foreach (XmlNode subtitleXml in subtitleXmlsList)
             {
-                SubtitleInfo subtitleInfo = new SubtitleInfo(subtitleXml, m_MovieFileInfo, m_SrtFile);
-                m_AllSubtitlesInfos.Add(subtitleInfo);
+                SubtitleObject subtitleObject = new SubtitleObject(subtitleXml, m_MovieFileInfo, m_SrtFile);
+                m_AllSubtitlesInfos.Add(subtitleObject);
             }
         }
 
-        public List<SubtitleInfo> getFilteredByLanguage(string i_Language)
+        public List<SubtitleObject> getFilteredByLanguage(string i_Language)
         {
             return m_AllSubtitlesInfos.Where(info => info.Languagh.ToLower() == i_Language.ToLower()).ToList();
         }
