@@ -8,6 +8,8 @@ namespace SubtitlesDownloader
 {
     public class SetupData
     {
+        public static readonly string SETUP_FOLDER_NAME = "SubtitlesDownloader";
+
         public static string trueStr = "true";
         public static string falseStr = "false";
 
@@ -15,8 +17,8 @@ namespace SubtitlesDownloader
 
         public SetupData()
         {
-            string dataFolderPath = string.Format(@"{0}\SubtitlesDownloader",
-                Environment.GetFolderPath(Environment.SpecialFolder.UserProfile));
+            string dataFolderPath = string.Format(@"{0}\{1}",
+                Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), SETUP_FOLDER_NAME);
             if (!Directory.Exists(dataFolderPath)) Directory.CreateDirectory(dataFolderPath);
 
             m_DataFilePath = string.Format(@"{0}\\data.txt", dataFolderPath);

@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Xml;
 using SubtitlesDownloader.Files;
 
@@ -13,7 +15,10 @@ namespace SubtitlesDownloader.OpenSubtitles
         {
             XmlData = i_XmlData;
             MovieFile = i_MovieFileInfo;
-            ZipFile = new MyFileInfo(string.Format(@"{0}\tempFolder{1}\{1}.zip", MovieFile.getFolderPath(), MovieFile.getFileName()));
+            ZipFile =
+                new MyFileInfo(string.Format(@"{0}\{1}\tempFolder{2}\{2}.zip",
+                    Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), SetupData.SETUP_FOLDER_NAME,
+                    i_MovieFileInfo.Hash));
             SrtFile = i_SrtFileInfo;
             XmlNodeList xmlMembersList = XmlData.FirstChild.ChildNodes;
             Id = XmlUtiles.getMemberValueByName(xmlMembersList, "IDSubtitleFile");
@@ -68,6 +73,9 @@ namespace SubtitlesDownloader.OpenSubtitles
         {
             using (var client = new WebClient())
             {
+                if (Directory.Exists(ZipFile.getFolderPath()))
+                    Directory.Delete(ZipFile.getFolderPath(), true);
+
                 Directory.CreateDirectory(ZipFile.getFolderPath());
                 client.DownloadFile(LinkToDownload, ZipFile.FilePath);
             }
